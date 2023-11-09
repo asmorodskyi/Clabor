@@ -45,7 +45,7 @@ export default class Game extends Phaser.Scene {
         ]
 
         for (let i = 0; i < this.cards.length; i++) {
-            this.load.image(this.cards[i].sprite, this.cards[i].filename);
+            this.load.image(this.cards[i].alias, this.cards[i].filename);
         }
 
     }
@@ -55,15 +55,10 @@ export default class Game extends Phaser.Scene {
 
         let self = this;
 
-
-		this.dealCards = () => {
-        	for (let i = 0; i < 5; i++) {
-                this.cards[i].render(475 + (i * 100), 650);
-            }
-    	}
-
 		this.dealText.on('pointerdown', function () {
-            self.dealCards();
+            for (let i = 0; i < 5; i++) {
+                self.cards[i].render(475 + (i * 100), 650);
+            }
         })
 
         this.dealText.on('pointerover', function () {
@@ -74,10 +69,6 @@ export default class Game extends Phaser.Scene {
             self.dealText.setColor('#00ffff');
         })
 
-        this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
-            gameObject.x = dragX;
-            gameObject.y = dragY;
-        })
     }
 
     update() {
