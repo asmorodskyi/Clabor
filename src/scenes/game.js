@@ -1,10 +1,17 @@
 import Card from '../helpers/card';
+import Player from '../helpers/player';
 
 export default class Game extends Phaser.Scene {
     constructor() {
         super({
             key: 'Game'
         });
+        this.config = {
+            players: [new Player(this, 'Player 1', 475, 800, 'bottom'),
+                      new Player(this, 'Player 2', 75, 250, 'left'),
+                      new Player(this, 'Player 3', 475, 100, 'top'),
+                      new Player(this, 'Player 4', 1425, 250, 'right')],
+         };
     }
 
     preload() {
@@ -51,24 +58,16 @@ export default class Game extends Phaser.Scene {
     }
 
     create() {
-        this.dealText = this.add.text(75, 350, ['DEAL CARDS']).setFontSize(18).setFontFamily('Trebuchet MS').setColor('#00ffff').setInteractive();
-
         let self = this;
 
-		this.dealText.on('pointerdown', function () {
-            for (let i = 0; i < 5; i++) {
-                self.cards[i].render(475 + (i * 100), 650);
+        for(let i = 0; i < self.config.players.length; i++) {
+            for(let j = 0; j < 5; j++) {
+                let randomCard = Phaser.Math.RND.pick(self.cards);
+                self.cards.splice(self.cards.indexOf(randomCard), 1);
+                self.config.players[i].cards.push(randomCard);
             }
-        })
-
-        this.dealText.on('pointerover', function () {
-            self.dealText.setColor('#ff69b4');
-        })
-
-        this.dealText.on('pointerout', function () {
-            self.dealText.setColor('#00ffff');
-        })
-
+            self.config.players[i].render();
+        }
     }
 
     update() {
