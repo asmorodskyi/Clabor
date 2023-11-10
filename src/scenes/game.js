@@ -1,3 +1,4 @@
+import io from 'socket.io-client';
 import Card from '../helpers/card';
 import Player from '../helpers/player';
 
@@ -11,6 +12,7 @@ export default class Game extends Phaser.Scene {
                       new Player(this, 'Player 2', 75, 250, 'left'),
                       new Player(this, 'Player 3', 475, 100, 'top'),
                       new Player(this, 'Player 4', 1425, 250, 'right')],
+            server_url: 'http://localhost:3000',
          };
     }
 
@@ -68,6 +70,13 @@ export default class Game extends Phaser.Scene {
             }
             self.config.players[i].render();
         }
+
+        this.socket = io(this.config.server_url);
+
+        this.socket.on('connect', function () {
+            console.log('Connected!');
+        });
+
     }
 
     update() {
