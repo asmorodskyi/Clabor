@@ -7,6 +7,9 @@ const config = {
     parent: "phaser-example",
     width: 1500,
     height: 900,
+    dom: {
+        createContainer: true
+    },
     scene: [
         Game
     ]

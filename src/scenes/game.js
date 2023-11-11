@@ -8,10 +8,7 @@ export default class Game extends Phaser.Scene {
             key: 'Game'
         });
         this.config = {
-            players: [new Player(this, 'Player 1', 475, 800, 'bottom'),
-                      new Player(this, 'Player 2', 75, 250, 'left'),
-                      new Player(this, 'Player 3', 475, 100, 'top'),
-                      new Player(this, 'Player 4', 1425, 250, 'right')],
+            players: [],
             server_url: 'http://localhost:3000',
          };
     }
@@ -53,6 +50,8 @@ export default class Game extends Phaser.Scene {
             new Card(this, 'queen', 'spades')
         ]
 
+        this.load.html('nameform', 'nameform.html');
+
         for (let i = 0; i < this.cards.length; i++) {
             this.load.image(this.cards[i].alias, this.cards[i].filename);
         }
@@ -61,20 +60,37 @@ export default class Game extends Phaser.Scene {
 
     create() {
         let self = this;
-
-        for(let i = 0; i < self.config.players.length; i++) {
-            for(let j = 0; j < 5; j++) {
-                let randomCard = Phaser.Math.RND.pick(self.cards);
-                self.cards.splice(self.cards.indexOf(randomCard), 1);
-                self.config.players[i].cards.push(randomCard);
-            }
-            self.config.players[i].render();
-        }
-
         this.socket = io(this.config.server_url);
 
-        this.socket.on('connect', function () {
-            console.log('Connected!');
+        const nameform = this.add.dom(400, 0).createFromCache('nameform');
+        nameform.addListener('click');
+        nameform.on('click', function (event)
+        {
+            if (event.target.name === 'playButton')
+            {
+                const inputText = this.getChildByName('nameField');
+                if (inputText.value !== '')
+                {
+                    this.removeListener('click');
+                    this.setVisible(false);
+                    self.myPlayer = new Player(self, inputText.value, 'me');
+                    self.myPlayer.render();
+                    self.socket.on('connect', function () {
+                        self.socket.emit("REGISTER", inputText.value);
+                        self.socket.on("REGISTERED", (arg) => {
+                            console.log(arg);
+                        });
+                    });
+                }
+            }
+
+        });
+        this.tweens.add({
+            targets: nameform,
+            y: 500,
+            x: 400,
+            duration: 3000,
+            ease: 'Power3'
         });
 
     }
