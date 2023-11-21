@@ -59,7 +59,7 @@ export default class Game extends Phaser.Scene {
 
     create() {
         let self = this;
-        this.socket = io(this.config.server_url);
+        self.socket = io(self.config.server_url);
 
         const nameform = this.add.dom(400, 0).createFromCache('nameform');
         nameform.addListener('click');
