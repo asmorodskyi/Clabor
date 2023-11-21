@@ -8,7 +8,6 @@ export default class Game extends Phaser.Scene {
             key: 'Game'
         });
         this.config = {
-            players: [],
             server_url: 'http://localhost:3000',
          };
     }
@@ -75,12 +74,7 @@ export default class Game extends Phaser.Scene {
                     this.setVisible(false);
                     self.myPlayer = new Player(self, inputText.value, 'me');
                     self.myPlayer.render();
-                    self.socket.on('connect', function () {
-                        self.socket.emit("REGISTER", inputText.value);
-                        self.socket.on("REGISTERED", (arg) => {
-                            console.log(arg);
-                        });
-                    });
+                    self.socket.emit("REGISTER", inputText.value);
                 }
             }
 

@@ -12,8 +12,14 @@ let players = [];
 io.on('connection', function (socket) {
   socket.on("REGISTER", (arg) => {
     players.push(arg);
-    console.log(players);
-    io.emit("REGISTERED", players);
+    if (players.length === 4) {
+      io.emit("CANCEL");
+    }
+    else {
+      players.push(arg);
+      console.log(arg);
+      io.emit("REGISTERED", players);
+    }
   });
 
   socket.on('disconnect', function () {
