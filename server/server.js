@@ -35,16 +35,20 @@ io.on('connection', function (socket) {
     else {
       console.log('Regestring user ' + arg);
       players.push({id: socket.id, name: arg});
-      io.emit("REGISTERED", players);
+      io.emit("REGISTERED", arg);
     }
   });
 
   socket.on('disconnect', function () {
-    console.log(getPlayerNameById(socket.id) + ' user disconnected');
-    deletePlayerById(socket.id);
+    playerName = getPlayerNameById(socket.id);
+    if(playerName !== null) {
+      console.log(playerName + ' user disconnected');
+      deletePlayerById(socket.id);
+    }
   });
 });
 
 http.listen(3000, function () {
     console.log('Server started!');
+    console.log(players);
 });

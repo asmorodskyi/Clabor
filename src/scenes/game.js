@@ -72,12 +72,14 @@ export default class Game extends Phaser.Scene {
                 {
                     this.removeListener('click');
                     this.setVisible(false);
-                    self.myPlayer = new Player(self, inputText.value, 'me');
-                    self.myPlayer.render();
                     self.socket.emit("REGISTER", inputText.value);
                 }
             }
 
+        });
+        self.socket.on("REGISTERED", function (playerName) {
+            self.myPlayer = new Player(self, playerName, 'me');
+            self.myPlayer.render();
         });
         this.tweens.add({
             targets: nameform,

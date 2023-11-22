@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Server side of the game holding whole game state",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon --delay 10 server.js"
   },
   "repository": {
     "type": "git",
