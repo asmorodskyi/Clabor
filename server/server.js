@@ -30,12 +30,12 @@ io.on('connection', function (socket) {
   socket.on("REGISTER", (arg) => {
     if (players.length === 4) {
       console.log('Game is full');
-      io.emit("CANCEL");
+      socket.emit("DENY");
     }
     else {
       console.log('Regestring user ' + arg);
       players.push({id: socket.id, name: arg});
-      io.emit("REGISTERED", arg);
+      socket.emit("REGISTERED", arg);
     }
   });
 

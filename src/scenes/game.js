@@ -10,10 +10,15 @@ export default class Game extends Phaser.Scene {
         this.config = {
             server_url: 'http://localhost:3000',
          };
-    }
+         this.playersDeck = [
+            {type: 'me', position: 'bottom', x: 475, y: 800},
+            {type: 'partner', position: 'top', x: 475, y: 100},
+            {type: 'opponent1', position: 'left', x: 75, y: 250},
+            {type: 'opponent2', position: 'right', x: 1425, y: 250}
+        ];
 
-    preload() {
-        this.load.setPath('assets/');
+        this.playersName = [];
+
         this.cards = [
             new Card(this, '10', 'clubs'),
             new Card(this, '7', 'clubs'),
@@ -47,14 +52,35 @@ export default class Game extends Phaser.Scene {
             new Card(this, 'jack', 'spades'),
             new Card(this, 'king', 'spades'),
             new Card(this, 'queen', 'spades')
-        ]
+        ];
+    }
 
+    preload() {
+        this.load.setPath('assets/');
         this.load.html('nameform', 'nameform.html');
-
+        for (let i = 0; i < this.playersDeck.length; i++) {
+            let labelX = this.playersDeck[i].x;
+            let labelY = this.playersDeck[i].y;
+            if (this.playersDeck[i].position === 'top') {
+                labelY += 100;
+            } else {
+                labelY -= 100;
+            }
+            let labelText = this.add.text(labelX, labelY, '', {
+                fontFamily: 'Trebuchet MS',
+                fontSize: 15,
+                color: '#00ffff'
+            });
+            this.playersName.push({type: this.playersDeck[i].type, label: labelText});
+        }
+        this.centerTextField = this.add.text(400, 300, '', {
+            fontFamily: 'Trebuchet MS',
+                fontSize: 15,
+                color: '#00ffff'
+            });
         for (let i = 0; i < this.cards.length; i++) {
             this.load.image(this.cards[i].alias, this.cards[i].filename);
         }
-
     }
 
     create() {
@@ -78,14 +104,18 @@ export default class Game extends Phaser.Scene {
 
         });
         self.socket.on("REGISTERED", function (playerName) {
+            console.log('Game started');
             self.myPlayer = new Player(self, playerName, 'me');
             self.myPlayer.render();
         });
+        self.socket.on("DENY", function () {
+            self.centerTextField.setText('Game is full');
+        });
         this.tweens.add({
             targets: nameform,
-            y: 500,
+            y: 300,
             x: 400,
-            duration: 3000,
+            duration: 100,
             ease: 'Power3'
         });
 

@@ -1,42 +1,33 @@
 export default class Player {
     constructor(scene, name, type) {
         this.name = name;
+        this.type = type;
         this.cards = [];
-        if (type === 'me') {
-            this.position = 'bottom';
-            this.x = 475;
-            this.y = 800;
-        }   else if (type === 'partner') {
-            this.position = 'top';
-            this.x = 475;
-            this.y = 100;
-        }  else if (type === 'opponent1') {
-            this.position = 'left';
-            this.x = 75;
-            this.y = 250;
-        } else if (type === 'opponent2') {
-            this.position = 'right';
-            this.x = 1425;
-            this.y = 250;
-        }
         for(let j = 0; j < 5; j++) {
             let randomCard = Phaser.Math.RND.pick(scene.cards);
             scene.cards.splice(scene.cards.indexOf(randomCard), 1);
             this.cards.push(randomCard);
         }
         this.render = () => {
-            let labelX = this.x;
-            let labelY = this.y;
-            if (this.position === 'top') {
-                labelY += 100;
-            } else {
-                labelY -= 100;
+            for (let i = 0; i < scene.playersName.length; i++) {
+                if (scene.playersName[i].type === this.type) {
+                    scene.playersName[i].label.setText(this.name);
+                    break;
+                }
             }
-            this.player = scene.add.text(labelX, labelY, [this.name]).setFontSize(15).setFontFamily('Trebuchet MS').setColor('#00ffff');
             for (let i = 0; i < this.cards.length; i++) {
-                let cardX = this.x;
-                let cardY = this.y;
-                if (this.position === 'bottom' || this.position === 'top') {
+                let cardX = 0;
+                let cardY = 0;
+                let position = '';
+                for (let j = 0; j < scene.playersDeck.length; j++) {
+                    if (scene.playersDeck[j].type === this.type) {
+                        cardX = scene.playersDeck[j].x;
+                        cardY = scene.playersDeck[j].y;
+                        position = scene.playersDeck[j].position;
+                        break;
+                    }
+                }
+                if (position === 'bottom' || position === 'top') {
                     cardX += i * 100;
                 } else {
                     cardY += i * 100;
