@@ -104,12 +104,18 @@ export default class Game extends Phaser.Scene {
 
         });
         self.socket.on("REGISTERED", function (playerName) {
-            console.log('Game started');
             self.myPlayer = new Player(self, playerName, 'me');
             self.myPlayer.render();
         });
         self.socket.on("DENY", function () {
             self.centerTextField.setText('Game is full');
+        });
+        self.socket.on("APPLY_STATE", function (state) {
+            let player_str = '';
+            for (let i = 0; i < state.length; i++) {
+                player_str += state[i].name + '\n';
+            }
+            self.centerTextField.setText(player_str);
         });
         this.tweens.add({
             targets: nameform,
@@ -122,6 +128,8 @@ export default class Game extends Phaser.Scene {
     }
 
     update() {
-
+        if (this.socket) {
+            this.socket.emit("GET_STATE");
+        }
     }
 }

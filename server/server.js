@@ -38,6 +38,9 @@ io.on('connection', function (socket) {
       socket.emit("REGISTERED", arg);
     }
   });
+  socket.on("GET_STATE", () => {
+    socket.emit("APPLY_STATE", players);
+  });
 
   socket.on('disconnect', function () {
     playerName = getPlayerNameById(socket.id);
@@ -50,5 +53,4 @@ io.on('connection', function (socket) {
 
 http.listen(3000, function () {
     console.log('Server started!');
-    console.log(players);
 });
