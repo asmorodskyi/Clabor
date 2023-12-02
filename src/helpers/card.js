@@ -1,8 +1,6 @@
 export default class Card {
-    constructor(scene, value, suit) {
-        this.value = value;
-        this.suit = suit;
-        this.alias = `${value}_of_${suit}`;
+    constructor(scene, alias) {
+        this.alias = alias;
         this.filename = `${this.alias}.png`;
         this.render = (x, y) => {
             this.card = scene.add.image(x, y, this.alias);

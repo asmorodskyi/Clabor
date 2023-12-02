@@ -1,5 +1,4 @@
 import io from 'socket.io-client';
-import Card from '../helpers/card';
 import Player from '../helpers/player';
 
 export default class Game extends Phaser.Scene {
@@ -18,41 +17,6 @@ export default class Game extends Phaser.Scene {
         ];
 
         this.playersName = [];
-
-        this.cards = [
-            new Card(this, '10', 'clubs'),
-            new Card(this, '7', 'clubs'),
-            new Card(this, '8', 'clubs'),
-            new Card(this, '9', 'clubs'),
-            new Card(this, 'ace', 'clubs'),
-            new Card(this, 'jack', 'clubs'),
-            new Card(this, 'king', 'clubs'),
-            new Card(this, 'queen', 'clubs'),
-            new Card(this, '10', 'diamonds'),
-            new Card(this, '7', 'diamonds'),
-            new Card(this, '8', 'diamonds'),
-            new Card(this, '9', 'diamonds'),
-            new Card(this, 'ace', 'diamonds'),
-            new Card(this, 'jack', 'diamonds'),
-            new Card(this, 'king', 'diamonds'),
-            new Card(this, 'queen', 'diamonds'),
-            new Card(this, '10', 'hearts'),
-            new Card(this, '7', 'hearts'),
-            new Card(this, '8', 'hearts'),
-            new Card(this, '9', 'hearts'),
-            new Card(this, 'ace', 'hearts'),
-            new Card(this, 'jack', 'hearts'),
-            new Card(this, 'king', 'hearts'),
-            new Card(this, 'queen', 'hearts'),
-            new Card(this, '10', 'spades'),
-            new Card(this, '7', 'spades'),
-            new Card(this, '8', 'spades'),
-            new Card(this, '9', 'spades'),
-            new Card(this, 'ace', 'spades'),
-            new Card(this, 'jack', 'spades'),
-            new Card(this, 'king', 'spades'),
-            new Card(this, 'queen', 'spades')
-        ];
     }
 
     preload() {
@@ -78,8 +42,42 @@ export default class Game extends Phaser.Scene {
                 fontSize: 15,
                 color: '#00ffff'
             });
-        for (let i = 0; i < this.cards.length; i++) {
-            this.load.image(this.cards[i].alias, this.cards[i].filename);
+        let all_cards = [
+            '10_of_clubs',
+            '7_of_clubs',
+            '8_of_clubs',
+            '9_of_clubs',
+            'ace_of_clubs',
+            'jack_of_clubs',
+            'king_of_clubs',
+            'queen_of_clubs',
+            '10_of_diamonds',
+            '7_of_diamonds',
+            '8_of_diamonds',
+            '9_of_diamonds',
+            'ace_of_diamonds',
+            'jack_of_diamonds',
+            'king_of_diamonds',
+            'queen_of_diamonds',
+            '10_of_hearts',
+            '7_of_hearts',
+            '8_of_hearts',
+            '9_of_hearts',
+            'ace_of_hearts',
+            'jack_of_hearts',
+            'king_of_hearts',
+            'queen_of_hearts',
+            '10_of_spades',
+            '7_of_spades',
+            '8_of_spades',
+            '9_of_spades',
+            'ace_of_spades',
+            'jack_of_spades',
+            'king_of_spades',
+            'queen_of_spades'
+            ];
+        for (let i = 0; i < all_cards.length; i++) {
+            this.load.image(all_cards[i], all_cards[i] + '.png');
         }
     }
 
@@ -103,8 +101,8 @@ export default class Game extends Phaser.Scene {
             }
 
         });
-        self.socket.on("REGISTERED", function (playerName) {
-            self.myPlayer = new Player(self, playerName, 'me');
+        self.socket.on("REGISTERED", function (data) {
+            self.myPlayer = new Player(self, data, 'me');
             self.myPlayer.render();
         });
         self.socket.on("DENY", function () {

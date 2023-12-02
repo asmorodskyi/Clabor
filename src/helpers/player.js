@@ -1,12 +1,11 @@
+import Card from '../helpers/card';
 export default class Player {
-    constructor(scene, name, type) {
-        this.name = name;
+    constructor(scene, data, type) {
+        this.name = data.name;
         this.type = type;
         this.cards = [];
-        for(let j = 0; j < 5; j++) {
-            let randomCard = Phaser.Math.RND.pick(scene.cards);
-            scene.cards.splice(scene.cards.indexOf(randomCard), 1);
-            this.cards.push(randomCard);
+        for (let i = 0; i < data.cards.length; i++) {
+            this.cards.push(new Card(scene, data.cards[i]));
         }
         this.render = () => {
             for (let i = 0; i < scene.playersName.length; i++) {
